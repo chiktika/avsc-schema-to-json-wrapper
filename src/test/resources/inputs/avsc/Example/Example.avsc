@@ -1,0 +1,42 @@
+{
+  "type" : "record",
+  "name" : "Example",
+  "namespace" : "com.tapad",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "long"
+  }, {
+    "name" : "my_enum",
+    "type" : [ "null", {
+      "type" : "enum",
+      "name" : "ExampleEnum",
+      "symbols" : [ "FOO", "BAR", "BAZ" ]
+    } ],
+    "default" : null
+  }, {
+    "name" : "my_nested_member",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "ExampleNesting",
+      "fields" : [ {
+        "name" : "counts",
+        "type" : {
+          "type" : "array",
+          "items" : "int"
+        }
+      }, {
+        "name" : "attributes",
+        "type" : [ "null", {
+          "type" : "map",
+          "values" : "string"
+        } ],
+        "default" : null
+      } ]
+    } ],
+    "default" : null
+  }, {
+    "name" : "guid",
+    "type" : [ "null", "string" ],
+    "default" : null
+  } ]
+}

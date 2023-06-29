@@ -1,0 +1,8 @@
+.bsp/*
+target/*
+#!target/docker/stage/Dockerfile
+.idea/*
+project/*
+!project/build.properties
+!project/plugins.sbt
+target/docker/stage/Dockerfile
