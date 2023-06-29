@@ -2,4 +2,6 @@
 
 A scala wrapper for fge/json-schema-avro
 
-Run AvscSchemaToJson with 2 parameters: input (containing avsc schema file) and output directories
+Convert avro schema (.avsc) to json schema
+
+Run AvscSchemaToJson with 2 parameters: input (containing avsc files) and output directories
