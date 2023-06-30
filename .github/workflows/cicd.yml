@@ -1,17 +1,10 @@
 name: CICD
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+ workflow_dispatch:
+ release:
+   types: [created]
 
-env:
-  # Use docker.io for Docker Hub if empty
-  REGISTRY: docker.io
-  # github.repository as <account>/<repo>
-  IMAGE_NAME: chiktika/avro-schema-to-json
-  
 jobs:
 
   build:
@@ -25,7 +18,11 @@ jobs:
       with:
         distribution: temurin
         java-version: 17
-     - name: Build Fat Jar
-       run: sbt assembly
+    - name: Publish Artifact
+      run: sbt test
+    - name: Publish package
+      run: sbt publish
+      env:
+        GITHUB_TOKEN: ${{ secrets.PACKAGING }}
 
 
