@@ -14,8 +14,9 @@ lazy val root = (project in file("."))
     name := "avsc-schema-to-json-wrapper",
     libraryDependencies += "com.github.fge" % "json-schema-avro" % "0.1.4",
     libraryDependencies += "com.github.fge" % "jackson-coreutils" % "1.8",
+    libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.16" % "test",
-    assembly / test := (Test / test).value,
+    assembly / test := (Test / test).value
   )
 
 Compile / mainClass := Some("AvscSchemaToJson")
