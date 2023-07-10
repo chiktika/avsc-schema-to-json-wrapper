@@ -3,13 +3,14 @@ import com.github.fge.avro.Avro2JsonSchemaProcessor
 import com.github.fge.jackson.JsonLoader
 import com.github.fge.jsonschema.core.report.{DevNullProcessingReport, ProcessingReport}
 import com.github.fge.jsonschema.core.tree.{JsonTree, SimpleJsonTree}
+import com.typesafe.scalalogging.LazyLogging
 
 import java.io.{File, FileWriter}
 import java.nio.file.Paths
 import scala.annotation.tailrec
 import scala.util.Try
 
-object AvscSchemaToJson {
+object AvscSchemaToJson extends LazyLogging {
 
   private val avroProcessor: Avro2JsonSchemaProcessor = new Avro2JsonSchemaProcessor()
 
@@ -21,11 +22,15 @@ object AvscSchemaToJson {
     val input: File = new File(args(0))
     val outputRootPath: String = args(1)
 
-
     val schemas = getFiles(input = input)
+      .filter(_.getName.endsWith(".avsc"))
       .map(
         f => (f, convertToJson(f))
       )
+
+    if (schemas.isEmpty) {
+      logger.warn(s"No avsc files found in ${input}")
+    }
 
     for ((file, schema) <- schemas) {
       writeFile(outputRootPath, file, schema.asText())
@@ -44,7 +49,6 @@ object AvscSchemaToJson {
 
     newDirs.length match {
       case l: Int if l == 0 =>
-        if (newFiles.length == 0) println(s"No files found in ${dirs.mkString("\n")}")
         newFiles
       case _ => getFiles(newFiles, newDirs.tail, newDirs.head)
     }
@@ -78,7 +82,7 @@ object AvscSchemaToJson {
     }.toEither match {
       case Left(e) =>
         throw new Exception(s"Error while writing file ${file.getPath} : $e")
-      case Right(outputFile) => println(s"Convert ${file.getPath} --to--> $outputFile")
+      case Right(outputFile) => logger.info(s"Convert ${file.getPath} --to--> $outputFile")
     }
   }
 }
