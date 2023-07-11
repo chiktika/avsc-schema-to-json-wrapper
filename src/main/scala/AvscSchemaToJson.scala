@@ -23,14 +23,9 @@ object AvscSchemaToJson extends LazyLogging {
     val outputRootPath: String = args(1)
 
     val schemas = getFiles(input = input)
-      .filter(_.getName.endsWith(".avsc"))
       .map(
         f => (f, convertToJson(f))
       )
-
-    if (schemas.isEmpty) {
-      logger.warn(s"No avsc files found in ${input}")
-    }
 
     for ((file, schema) <- schemas) {
       writeFile(outputRootPath, file, schema.asText())
@@ -44,11 +39,14 @@ object AvscSchemaToJson extends LazyLogging {
     val dirList: Array[File] = Option(input.listFiles())
       .fold(Array[File]())(d => d)
 
-    val newFiles = dirList.filter(_.isFile) ++ files
+    val newFiles = dirList.filter(_.isFile).filter(_.getName.endsWith(".avsc")) ++ files
     val newDirs = dirList.filter(_.isDirectory) ++ dirs
 
     newDirs.length match {
       case l: Int if l == 0 =>
+        if (newFiles.isEmpty) {
+          logger.warn(s"No avsc files found")
+        }
         newFiles
       case _ => getFiles(newFiles, newDirs.tail, newDirs.head)
     }
