@@ -23,6 +23,25 @@ lazy val root = (project in file("."))
 Compile / mainClass := Some("AvscSchemaToJson")
 assembly / mainClass := Some("AvscSchemaToJson")
 assembly / assemblyJarName := "AvscSchemaToJson.jar"
+assembly / assemblyMergeStrategy := {
+    case "module-info.class" => MergeStrategy.discard
+    case x if x.endsWith("/module-info.class") => MergeStrategy.discard
+    case "application.conf" => new sbtassembly.MergeStrategy {
+        val name = "reverseConcat"
+
+        def apply(tempDir: File, path: String, files: Seq[File]): Either[String, Seq[(File, String)]] =
+            MergeStrategy.concat(tempDir, path, files.reverse)
+    }
+    case "logback.xml" => MergeStrategy.first
+    case x =>
+        val oldStrategy = (assembly / assemblyMergeStrategy).value
+        oldStrategy(x)
+
+}
+
+
+
+
 packageName := "chiktikacontrib/avsc-schema-to-json"
 dockerBaseImage := "openjdk:17-jdk-slim"
 dockerUpdateLatest := true
