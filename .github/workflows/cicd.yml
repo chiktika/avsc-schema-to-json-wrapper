@@ -2,27 +2,40 @@ name: CICD
 
 on:
  workflow_dispatch:
- release:
-   types: [created]
+ push:
+  tags:
+    - "*.*.*"
+
+env:
+  GITHUB_TOKEN: ${{ github.token }}
 
 jobs:
 
-  build:
+  release_artifact:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
+
     - name: Setup JDK
       uses: actions/setup-java@v3
       with:
         distribution: temurin
         java-version: 17
-    - name: Publish Artifact
-      run: sbt test
-    - name: Publish package
-      run: sbt publish
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
+
+    - name: Build Artifact
+      run: sbt assembly
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: /home/runner/work/avsc-schema-to-json-wrapper/avsc-schema-to-json-wrapper/target/scala-2.13/AvscSchemaToJson.jar
+        token: GITHUB_TOKEN
+        
+    # - name: Publish package
+    #   run: sbt publish
+    #   env:
+    #     GITHUB_TOKEN: ${{ github.token }}
 
 
