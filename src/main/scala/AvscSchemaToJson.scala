@@ -7,6 +7,7 @@ import com.typesafe.scalalogging.LazyLogging
 
 import java.io.{File, FileWriter}
 import java.nio.file.Paths
+import scala.Option.when
 import scala.annotation.tailrec
 import scala.util.Try
 
@@ -36,8 +37,9 @@ object AvscSchemaToJson extends LazyLogging {
   @tailrec
   private def getFiles(files: Array[File] = Array[File](), dirs: Array[File] = Array[File](), input: File): Array[File] = {
 
-    val dirList: Array[File] = Option(input.listFiles())
-      .fold(Array[File]())(d => d)
+    val dirList: Array[File] =
+      Option(input.listFiles())
+      .fold(if(input.isFile) Array(input) else Array[File]())(d => d)
 
     val newFiles = dirList.filter(_.isFile).filter(_.getName.endsWith(".avsc")) ++ files
     val newDirs = dirList.filter(_.isDirectory) ++ dirs
@@ -80,7 +82,7 @@ object AvscSchemaToJson extends LazyLogging {
     }.toEither match {
       case Left(e) =>
         throw new Exception(s"Error while writing file ${file.getPath} : $e")
-      case Right(outputFile) => logger.info(s"Convert ${file.getPath} --to--> $outputFile")
+      case Right(outputFile) => logger.info(s"File converted: [${file.getPath}]")
     }
   }
 }

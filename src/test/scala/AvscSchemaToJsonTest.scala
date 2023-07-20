@@ -40,6 +40,14 @@ class AvscSchemaToJsonTest extends AnyFeatureSpec with should.Matchers with Befo
       assert(expectedFile_2.exists())
       assert(expectedFile_3.exists())
     }
+
+    Scenario("Convert a specific file") {
+
+      AvscSchemaToJson.main(Array("./src/test/resources/inputs/avsc/Example/Example_1.avsc", "./src/test/resources/outputs/json"))
+
+      val expectedFile = new File("./src/test/resources/outputs/json/Example/Example_1.json")
+      assert(expectedFile.exists())
+    }
   }
   Feature("Exception cases") {
 
