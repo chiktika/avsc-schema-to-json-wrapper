@@ -82,7 +82,7 @@ object AvscSchemaToJson extends LazyLogging {
     }.toEither match {
       case Left(e) =>
         throw new Exception(s"Error while writing file ${file.getPath} : $e")
-      case Right(outputFile) => logger.info(s"File converted: [${file.getPath}]")
+      case Right(_) => logger.info(s"File converted: [${file.getPath}]")
     }
   }
 }
