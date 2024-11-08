@@ -8,12 +8,16 @@ enablePlugins(
     JavaAppPackaging,
     DockerPlugin
 )
+resolvers += "Secured Central Repository" at "https://repo1.maven.org/maven2"
+//externalResolvers := Resolver.withDefaultResolvers(resolvers.value, mavenCentral = false)
 
 lazy val root = (project in file("."))
   .settings(
     name := "avsc-schema-to-json-wrapper",
-    libraryDependencies += "com.github.fge" % "json-schema-avro" % "0.1.4",
-    libraryDependencies += "com.github.fge" % "jackson-coreutils" % "1.8",
+//    libraryDependencies += "com.github.fge" % "json-schema-avro" % "0.1.4",
+//    libraryDependencies += "com.github.fge" % "jackson-coreutils" % "1.8",
+      libraryDependencies += "com.github.java-json-tools" % "json-schema-avro" % "0.1.8",
+      libraryDependencies += "com.github.java-json-tools" % "jackson-coreutils" % "2.0",
     libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.5",
     libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.4.7",
     libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.16" % "test",
