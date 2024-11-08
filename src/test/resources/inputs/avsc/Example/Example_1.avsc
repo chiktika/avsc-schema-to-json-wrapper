@@ -4,7 +4,8 @@
   "namespace" : "com.tapad",
   "fields" : [ {
     "name" : "id",
-    "type" : "long"
+    "type" : "long",
+    "default": 2L
   }, {
     "name" : "my_enum",
     "type" : [ "null", {
